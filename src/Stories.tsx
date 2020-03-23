@@ -115,7 +115,7 @@ class Stories extends React.Component<Props, State> {
   onSwipeUp = () => {};
 
   nextStory = () => {
-    console.log('next', new Date().getMilliseconds());
+    // console.log('next', new Date().getMilliseconds());
 
     this.carouselRef.current.snapToNext();
   };
@@ -141,14 +141,20 @@ class Stories extends React.Component<Props, State> {
       isActive: this.state.activeIndex === index,
       snapTonextStory: this.nextStory,
       setStory: (story: Story) => {
-        console.log(index, 'called setState', new Date().getMilliseconds());
+        // console.log(index, 'called setState', new Date().getMilliseconds());
         let changed = false;
         for (let key in story) {
-          if (story[key] !== this.state.stories[index][key] && !changed) {
+          if (story[key] !== this.state.stories[index][key]) {
             changed = true;
-            if (this.state.activeIndex === index) {
-              console.log(index, key, 'changed', new Date().getMilliseconds());
-            }
+            // if (this.state.activeIndex === index) {
+            //   console.log(
+            //     index,
+            //     key,
+            //     'changed to',
+            //     story[key],
+            //     new Date().getMilliseconds()
+            //   );
+            // }
           }
         }
 
@@ -170,19 +176,20 @@ class Stories extends React.Component<Props, State> {
   };
 
   render() {
-    console.log('stories rendered', new Date().getMilliseconds());
+    // console.log('stories rendered', new Date().getMilliseconds());
 
     return (
       <View style={styles.container}>
         <Carousel
           lockScrollWhileSnapping
           ref={this.carouselRef}
-          data={this.state.data}
+          data={this.state.stories}
           renderItem={this.renderItem}
           sliderWidth={Dimensions.get('window').width}
           itemWidth={Dimensions.get('window').width}
           horizontal
           swipeThreshold={50}
+          shouldOptimizeUpdates={false}
           // enableMomentum
           decelerationRate={'fast'}
           onBeforeSnapToItem={this.onBeforeSnapItem}

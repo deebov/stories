@@ -1,9 +1,13 @@
-import React, { useEffect, memo } from 'react';
+import React, { useEffect, useRef } from 'react';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import { Linking, StyleSheet, View } from 'react-native';
 import Buffering from './Buffering';
 import FooterAction from './FooterAction';
-import { LongPressGestureHandler, State } from 'react-native-gesture-handler';
+import {
+  LongPressGestureHandler,
+  State,
+  LongPressGestureHandlerGestureEvent
+} from 'react-native-gesture-handler';
 
 export interface Props {
   start: () => any;
@@ -23,6 +27,7 @@ const SlideWrapper: React.FC<Props> = ({
   action,
   children
 }) => {
+  const transitionRef = useRef();
   useEffect(() => {
     if (isActive) {
       if (!isBuffering) {
@@ -38,34 +43,48 @@ const SlideWrapper: React.FC<Props> = ({
       Linking.openURL(action.url);
     }
   };
-  // if (isActive) {
+  if (isActive) {
     // console.log(isActive);
-  // }
-  // console.log(isActive, 'slide wrapper rendered');
+    // console.log(buffering, 'slide wrapper rendered');
+  }
+
+  const gestureHandler = ({
+    nativeEvent
+  }: LongPressGestureHandlerGestureEvent) => {
+    if (nativeEvent.state === State.ACTIVE) {
+      if (transitionRef.current) {
+        transitionRef.current.animateNextTransition();
+      }
+      pause();
+    }
+    if (nativeEvent.state === State.END) {
+      if (transitionRef.current) {
+        transitionRef.current.animateNextTransition();
+      }
+      start();
+    }
+  };
+  // console.log(isActive, 'SLIDE WRAPPER BUFFERING', isBuffering);
 
   return (
     <View style={styles.container}>
-      <Buffering active={isBuffering} />
       <LongPressGestureHandler
-        onHandlerStateChange={({ nativeEvent }) => {
-          if (nativeEvent.state === State.ACTIVE) {
-            pause();
-          }
-          if (nativeEvent.state === State.END) {
-            start();
-          }
-        }}
+        onHandlerStateChange={gestureHandler}
         minDurationMs={90}
       >
-        <GestureRecognizer
-          // onTouchStart={!isBuffering ? pause : undefined}
-          // onTouchEnd={!isBuffering ? start : undefined}
-          onSwipeUp={onSwipeUp}
-          style={styles.container}
-        >
-          {children}
-        </GestureRecognizer>
+        <View style={styles.container}>
+          <GestureRecognizer
+            // onTouchStart={!isBuffering ? pause : undefined}
+            // onTouchEnd={!isBuffering ? start : undefined}
+            onSwipeUp={onSwipeUp}
+            style={styles.container}
+          >
+            {children}
+            <Buffering ref={transitionRef} active={isBuffering} />
+          </GestureRecognizer>
+        </View>
       </LongPressGestureHandler>
+
       {action && <FooterAction label={action.label} url="" />}
     </View>
   );

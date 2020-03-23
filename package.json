@@ -8,6 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@types/react-native-snap-carousel": "^3.8.1",
     "expo": "~36.0.0",
     "expo-av": "~8.0.0",
     "react": "~16.9.0",

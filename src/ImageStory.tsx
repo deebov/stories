@@ -19,7 +19,7 @@ const ImageStory: React.FC<Props> = ({
   snapTonextStory,
   index
 }) => {
-  // const [buffering, setBuffering] = useState(true);
+  const [buffering, setBuffering] = useState(true);
   // const duration = story.duration || 5000;
 
   // const { time, start, pause, reset } = useTimer({
@@ -37,17 +37,15 @@ const ImageStory: React.FC<Props> = ({
   // }, [time]);
 
   // useEffect(() => {
-  //   if (!story.isBuffering) {
+  // if (!story.isBuffering) {
   // setStory({ ...story, isPlaying: true });
   // console.log(index, 'playing', new Date().getMilliseconds());
-  // setTimeout(() => {
-  //   snapTonextStory();
-  // }, story.duration);
-  // }
+
+  //   console.log('buffering state inside image is', story.isBuffering);
   // }, [story.isBuffering]);
   // console.log(index, buffering);
   // console.log(story.isBuffering);
-
+  // console.log('buffering state inside image is', story.isBuffering);
   return (
     <SlideWrapper
       start={() => setStory({ ...story, isPlaying: true })}
@@ -60,7 +58,7 @@ const ImageStory: React.FC<Props> = ({
       <Image
         source={{ uri: story.source }}
         style={styles.image}
-        onLoadStart={() => setStory({ ...story, isBuffering: false })}
+        onLoadStart={() => setStory({ ...story, isBuffering: true })}
         onLoad={() => setStory({ ...story, isBuffering: false })}
         onError={console.log}
       />

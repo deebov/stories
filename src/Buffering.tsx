@@ -1,37 +1,43 @@
-import React from 'react';
-import { ActivityIndicator, StyleSheet } from 'react-native';
-import * as Animatable from 'react-native-animatable';
+import React, { useRef, useEffect, forwardRef } from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+// import * as Animatable from 'react-native-animatable';
+import { Transitioning, Transition } from 'react-native-reanimated';
 
 interface Props {
   active: boolean;
 }
 
-const Buffering: React.FC<Props> = ({ active }) => {
+const transition = (
+  <Transition.Together>
+    <Transition.In durationMs={90} interpolation="linear" type="fade" />
+    <Transition.Out durationMs={150} interpolation="linear" type="fade" />
+  </Transition.Together>
+);
+
+const Buffering: React.FC<Props> = forwardRef(({ active }, ref) => {
   return (
-    <Animatable.View
-      easing='ease-in-out'
-      duration={300}
-      transition='opacity'
-      style={{
-        ...styles.container,
-        opacity: active ? 1 : 0,
-      }}
+    <Transitioning.View
+      ref={ref}
+      transition={transition}
+      style={{ ...StyleSheet.absoluteFillObject, zIndex: 99 }}
     >
-      <ActivityIndicator />
-    </Animatable.View>
+      {active && (
+        <View style={styles.container}>
+          <ActivityIndicator />
+        </View>
+      )}
+    </Transitioning.View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
+    ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0,0,0,.7)',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 0,
-  },
+    zIndex: 99
+  }
 });
 
 export default Buffering;

@@ -1188,6 +1188,21 @@
   resolved "https://registry.yarnpkg.com/@types/qs/-/qs-6.9.1.tgz#937fab3194766256ee09fcd40b781740758617e7"
   integrity sha512-lhbQXx9HKZAPgBkISrBcmAcMpZsmpe/Cd/hY7LGZS5OfkySUBItnPZHgQPssWYUET8elF+yCFBbP1Q0RZPTdaw==
 
+"@types/react-native-snap-carousel@^3.8.1":
+  version "3.8.1"
+  resolved "https://registry.yarnpkg.com/@types/react-native-snap-carousel/-/react-native-snap-carousel-3.8.1.tgz#1fabbae6053c2c234f11cec6e5622086677b4da4"
+  integrity sha512-nKpCGtyvi0RB7iyrMf3Zyl9r4fvEVMnhBnHNWZe5FPvTiJ+XPPJw3lo9HOoqZIySVvYoASQdGnFLgWnugiUmHw==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
+
+"@types/react-native@*":
+  version "0.61.23"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.61.23.tgz#bff4e0311c229a5203eb37aacd4febf59f3e2980"
+  integrity sha512-upHmySsrVBDBokWWhYIKkKnpvadsHdioSjbBTu4xl7fjN0yb94KR5ngUOBXsyqAYqQzF+hP6qpvobG9M7Jr6hw==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-native@~0.60.23":
   version "0.60.31"
   resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.60.31.tgz#a7af12197f884ad8dd22cda2df9862ed72973ded"

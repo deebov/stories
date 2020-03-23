@@ -73,13 +73,13 @@ const Indicator: React.FC<{ index: number; activeIndex?: number }> = memo(
     const isActive = index === activeIndex;
     // console.log(index, 'indicator rendered');
 
-    if (isActive) {
-      console.log(
-        index,
-        `indicator ${playing ? 'playing' : 'not playing'}`,
-        new Date().getMilliseconds()
-      );
-    }
+    // if (isActive) {
+    //   console.log(
+    //     index,
+    //     `indicator ${playing ? 'playing' : 'not playing'}`,
+    //     new Date().getMilliseconds()
+    //   );
+    // }
 
     const { isPlaying, clock, progress } = useMemoOne(
       () => ({
