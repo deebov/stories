@@ -3,19 +3,21 @@ import { StyleSheet } from 'react-native';
 import { Video } from 'expo-av';
 import { Story } from './Stories';
 import SlideWrapper from './SlideWrapper';
+import debounce from 'debounce';
 
 export interface Props {
   story: Story;
   isActive: boolean;
   index: number;
+
   setStory: (story: Story) => void;
   snapTonextStory: () => void;
+  onClose: () => void;
 }
 
 const VideoStory: React.FC<Props> = memo(
-  ({ index, isActive, story, setStory, snapTonextStory }) => {
+  ({ index, isActive, story, setStory, snapTonextStory, onClose }) => {
     const videoRef = useRef();
-    // const [buffering, setBuffering] = useState(false);
 
     const onStatusChange = (status: any) => {
       const {
@@ -25,7 +27,7 @@ const VideoStory: React.FC<Props> = memo(
         isLooping,
         error,
         isLoaded,
-        isPlaying
+        isPlaying,
       } = status;
 
       if (!isLoaded) {
@@ -35,17 +37,10 @@ const VideoStory: React.FC<Props> = memo(
       } else {
         const updatedStory = { ...story };
 
-        if (isActive) {
-          if (isPlaying) {
-            // console.log(index, 'playing', new Date().getMilliseconds());
-          } else {
-            // console.log(index, 'not playing', new Date().getMilliseconds());
-          }
-        }
         updatedStory.isPlaying = isPlaying;
         updatedStory.duration = durationMillis;
         updatedStory.isBuffering = isBuffering;
-        // setBuffering(buffering);
+
         setStory(updatedStory);
 
         if (didJustFinish && !isLooping) {
@@ -69,13 +64,16 @@ const VideoStory: React.FC<Props> = memo(
         videoRef.current.stopAsync();
       }
     };
+    // console.log(story);
 
     return (
       <SlideWrapper
         start={play}
         pause={pause}
         reset={reset}
-        isBuffering={story.isBuffering}
+        isBuffering={!!story.isBuffering}
+        isPlaying={story.isPlaying}
+        onClose={onClose}
         isActive={isActive}
         action={story.action}
       >
@@ -93,16 +91,16 @@ const VideoStory: React.FC<Props> = memo(
           onPlaybackStatusUpdate={onStatusChange}
           ref={videoRef}
           source={{
-            uri: story.source
+            uri: story.source,
           }}
-          resizeMode="cover"
+          resizeMode='cover'
           shouldPlay={index === 0 ? true : false}
           isLooping={false}
           isMuted={true}
         />
       </SlideWrapper>
     );
-  }
+  },
 );
 
 const styles = StyleSheet.create({
@@ -111,8 +109,8 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     width: '100%',
-    height: '100%'
-  }
+    height: '100%',
+  },
 });
 
 export default VideoStory;

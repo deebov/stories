@@ -1,12 +1,32 @@
 {
-  "main": "node_modules/expo/AppEntry.js",
-  "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "eject": "expo eject"
+  "name": "react-native-stories",
+  "version": "3.9.0",
+  "description": "Instagram-like Stories component. Compatible with Android & iOS.",
+  "main": "src/index.tsx",
+  "repository": {
+    "type": "git",
+    "url": "github.com/archriss/react-native-stories"
   },
+  "keywords": [
+    "react",
+    "native",
+    "expo",
+    "instagram",
+    "snapchat",
+    "swiper",
+    "stories",
+    "story",
+    "slider",
+    "images",
+    "video",
+    "snap",
+    "tinder",
+    "android",
+    "ios",
+    "rtl"
+  ],
+  "author": "Dilshod Turobov <deebov@yandex.com> (github.com/deebov)",
+  "license": "",
   "dependencies": {
     "@types/react-native-snap-carousel": "^3.8.1",
     "expo": "~36.0.0",
@@ -14,16 +34,12 @@
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
-    "react-native-animatable": "^1.3.3",
     "react-native-eva-icons": "^1.3.0",
     "react-native-gesture-handler": "~1.5.0",
     "react-native-reanimated": "~1.4.0",
     "react-native-redash": "^10.0.1",
-    "react-native-screens": "2.0.0-alpha.12",
     "react-native-snap-carousel": "^3.8.4",
-    "react-native-svg": "9.13.3",
     "react-native-swipe-gestures": "^1.0.5",
-    "react-native-web": "~0.11.7",
     "use-memo-one": "^1.1.1"
   },
   "devDependencies": {
@@ -33,5 +49,9 @@
     "babel-preset-expo": "~8.0.0",
     "typescript": "~3.6.3"
   },
-  "private": true
+  "homepage": "https://github.com/archriss/react-native-stories",
+  "bugs": {
+    "url": "https://github.com/archriss/react-native-stories/issues"
+  },
+  "readmeFilename": "README.md"
 }

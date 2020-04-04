@@ -1,6 +1,5 @@
-import React, { useRef, useEffect, forwardRef } from 'react';
+import React, { forwardRef } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-// import * as Animatable from 'react-native-animatable';
 import { Transitioning, Transition } from 'react-native-reanimated';
 
 interface Props {
@@ -9,8 +8,8 @@ interface Props {
 
 const transition = (
   <Transition.Together>
-    <Transition.In durationMs={90} interpolation="linear" type="fade" />
-    <Transition.Out durationMs={150} interpolation="linear" type="fade" />
+    <Transition.In durationMs={90} interpolation='linear' type='fade' />
+    <Transition.Out durationMs={150} interpolation='linear' type='fade' />
   </Transition.Together>
 );
 
@@ -36,8 +35,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,.7)',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 99
-  }
+    zIndex: 99,
+  },
 });
 
 export default Buffering;

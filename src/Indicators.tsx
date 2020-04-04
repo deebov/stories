@@ -1,9 +1,13 @@
-import React, { memo, useContext } from 'react';
+import React, { memo, useContext, forwardRef } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
-import { ProgressContext } from './Stories';
-import Animated, { Easing } from 'react-native-reanimated';
+import { StoriesContext } from './Stories';
+import Animated, {
+  Easing,
+  Transition,
+  Transitioning,
+  TransitioningView,
+} from 'react-native-reanimated';
 import { useMemoOne } from 'use-memo-one';
-import { useTransition } from 'react-native-redash';
 
 interface Props {
   activeIndex?: number;
@@ -24,17 +28,15 @@ const {
   not,
   timing,
   eq,
-  Extrapolate,
-  interpolate,
   call,
   greaterThan,
-  lessThan
+  lessThan,
 } = Animated;
 
 const runTiming = (
   clock: Animated.Clock,
   duration: number,
-  callback: () => void
+  callback: () => void,
 ) => {
   const snapped = new Value(0);
 
@@ -42,52 +44,43 @@ const runTiming = (
     time: new Value(0),
     position: new Value(0),
     finished: new Value(0),
-    frameTime: new Value(0)
+    frameTime: new Value(0),
   };
 
   const config = {
     duration: duration,
     toValue: new Value(1),
-    easing: Easing.linear
+    easing: Easing.linear,
   };
   return block([
     cond(
       not(clockRunning(clock)),
       set(state.time, 0),
-      timing(clock, state, config)
+      timing(clock, state, config),
     ),
     cond(and(state.finished, eq(snapped, 0)), [
       call([], callback),
-      set(snapped, 1)
+      set(snapped, 1),
     ]),
-    state.position
+    state.position,
   ]);
 };
 
 const Indicator: React.FC<{ index: number; activeIndex?: number }> = memo(
-  ({ index, activeIndex }) => {
-    const data = useContext(ProgressContext);
-    const duration = data.stories[index].duration;
+  ({ index, activeIndex = 0 }) => {
+    const data = useContext(StoriesContext);
+    const duration = data.stories[index].duration || 0;
     const playing = data.stories[index].isPlaying;
     let snapToNext = data.snapToNext;
     const isActive = index === activeIndex;
-    // console.log(index, 'indicator rendered');
-
-    // if (isActive) {
-    //   console.log(
-    //     index,
-    //     `indicator ${playing ? 'playing' : 'not playing'}`,
-    //     new Date().getMilliseconds()
-    //   );
-    // }
 
     const { isPlaying, clock, progress } = useMemoOne(
       () => ({
         progress: new Value(0) as Animated.Value<number>,
         clock: new Clock(),
-        isPlaying: new Value(0) as Animated.Value<number>
+        isPlaying: new Value(0) as Animated.Value<number>,
       }),
-      [index, activeIndex]
+      [index, activeIndex],
     );
 
     isPlaying.setValue(playing ? 1 : 0);
@@ -100,9 +93,9 @@ const Indicator: React.FC<{ index: number; activeIndex?: number }> = memo(
         block([
           cond(and(isPlaying, not(clockRunning(clock))), startClock(clock)),
           cond(and(not(isPlaying), clockRunning(clock)), stopClock(clock)),
-          cond(duration, set(progress, runTiming(clock, duration, snapToNext)))
+          cond(duration, set(progress, runTiming(clock, duration, snapToNext))),
         ]),
-      [isPlaying, clock, progress, duration]
+      [isPlaying, clock, progress, duration],
     );
 
     return (
@@ -113,48 +106,50 @@ const Indicator: React.FC<{ index: number; activeIndex?: number }> = memo(
             flex: cond(
               lessThan(index, activeIndex),
               1,
-              cond(greaterThan(index, activeIndex), 0, progress)
-            )
-          }
+              cond(greaterThan(index, activeIndex), 0, progress),
+            ),
+          },
         ]}
       />
     );
-  }
+  },
 );
 
-const Indicators: React.FC<Props> = memo(({ activeIndex, length }) => {
-  // console.log('indicators rendered');
+const transition = (
+  <Transition.Change durationMs={300} interpolation='easeInOut' />
+);
 
-  return (
-    <View style={styles.container}>
-      {Array(length)
-        .fill('')
-        .map((indicator: any, idx: number) => {
-          const isActive = idx === activeIndex;
-          const transition = useTransition(isActive, {
-            duration: 300,
-            easing: Easing.out(Easing.ease)
-          });
-          // const flex = interpolate(transition, {
-          //   inputRange: [0, 1],
-          //   outputRange: [0, 1],
-          //   extrapolate: Extrapolate.CLAMP
-          // });
-          return (
-            <Animated.View
-              key={idx}
-              style={[
-                { ...styles.indicator, marginLeft: idx > 0 ? 10 : 0 },
-                { flex: transition }
-              ]}
-            >
-              <Indicator index={idx} activeIndex={activeIndex} />
-            </Animated.View>
-          );
-        })}
-    </View>
-  );
-});
+const Indicators: React.FC<Props> = memo(
+  forwardRef<TransitioningView, Props>(({ activeIndex, length }, ref) => {
+
+    
+    return (
+      <Transitioning.View
+        ref={ref}
+        transition={transition}
+        style={styles.container}
+      >
+        {Array(length)
+          .fill('')
+          .map((indicator: any, idx: number) => {
+            const isActive = idx === activeIndex;
+            // console.log(idx, isActive)
+            return (
+              <View
+                key={idx}
+                style={[
+                  { ...styles.indicator, marginLeft: idx > 0 ? 10 : 0 },
+                  { flex: isActive ? 1 : 0 },
+                ]}
+              >
+                <Indicator index={idx} activeIndex={activeIndex} />
+              </View>
+            );
+          })}
+      </Transitioning.View>
+    );
+  }),
+);
 
 const width = Dimensions.get('window').width / 1.7;
 const windowWidth = Dimensions.get('window').width / 2;
@@ -169,11 +164,11 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 8
+      height: 8,
     },
     shadowOpacity: 0.44,
     shadowRadius: 10.32,
-    elevation: 16
+    elevation: 16,
   },
   indicator: {
     borderRadius: 100,
@@ -182,13 +177,13 @@ const styles = StyleSheet.create({
     minWidth: 10,
     overflow: 'hidden',
     backgroundColor: 'rgba(0,0,0,.4)',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   indicatorOverlay: {
     backgroundColor: 'white',
     flex: 1,
-    borderRadius: 100
-  }
+    borderRadius: 100,
+  },
 });
 
 export default Indicators;

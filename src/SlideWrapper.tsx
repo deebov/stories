@@ -6,13 +6,14 @@ import FooterAction from './FooterAction';
 import {
   LongPressGestureHandler,
   State,
-  LongPressGestureHandlerGestureEvent
+  LongPressGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler';
 
 export interface Props {
   start: () => any;
   pause: () => any;
   reset: () => any;
+  onClose: () => any;
   action: any;
   isBuffering: boolean;
   isActive: boolean;
@@ -25,7 +26,8 @@ const SlideWrapper: React.FC<Props> = ({
   isBuffering,
   isActive,
   action,
-  children
+  children,
+  onClose,
 }) => {
   const transitionRef = useRef();
   useEffect(() => {
@@ -43,13 +45,9 @@ const SlideWrapper: React.FC<Props> = ({
       Linking.openURL(action.url);
     }
   };
-  if (isActive) {
-    // console.log(isActive);
-    // console.log(buffering, 'slide wrapper rendered');
-  }
 
   const gestureHandler = ({
-    nativeEvent
+    nativeEvent,
   }: LongPressGestureHandlerGestureEvent) => {
     if (nativeEvent.state === State.ACTIVE) {
       if (transitionRef.current) {
@@ -77,6 +75,7 @@ const SlideWrapper: React.FC<Props> = ({
             // onTouchStart={!isBuffering ? pause : undefined}
             // onTouchEnd={!isBuffering ? start : undefined}
             onSwipeUp={onSwipeUp}
+            // onSwipeDown={onClose}
             style={styles.container}
           >
             {children}
@@ -85,7 +84,7 @@ const SlideWrapper: React.FC<Props> = ({
         </View>
       </LongPressGestureHandler>
 
-      {action && <FooterAction label={action.label} url="" />}
+      {action && <FooterAction label={action.label} url='' />}
     </View>
   );
 };
@@ -94,8 +93,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    height: '100%'
-  }
+    height: '100%',
+  },
 });
 
 export default SlideWrapper;
