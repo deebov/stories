@@ -33,8 +33,12 @@ const ImageStory: React.FC<Props> = ({
       <Image
         source={{ uri: story.source }}
         style={styles.image}
-        onLoadStart={() => setStory({ ...story, isBuffering: true })}
-        onLoad={() => setStory({ ...story, isBuffering: false })}
+        onLoadStart={() =>
+          setStory({ ...story, isBuffering: true, isPlaying: false })
+        }
+        onLoad={() =>
+          setStory({ ...story, isBuffering: false, isPlaying: true })
+        }
         onError={console.log}
       />
     </SlideWrapper>

@@ -91,7 +91,7 @@ const VideoStory: React.FC<Props> = memo(
           resizeMode="cover"
           shouldPlay={index === 0 ? true : false}
           isLooping={false}
-          isMuted={true}
+          isMuted={false}
         />
       </SlideWrapper>
     );
