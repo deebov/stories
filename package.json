@@ -1,6 +1,6 @@
 {
   "name": "rn-stories",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Instagram-like Stories component. Compatible with Android & iOS.",
   "main": "src/index.tsx",
   "scripts": {
