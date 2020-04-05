@@ -1,4 +1,4 @@
-import React, { forwardRef, RefObject, Ref } from 'react';
+import React, { forwardRef, Ref } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import {
   Transitioning,

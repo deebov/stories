@@ -3617,11 +3617,6 @@ react-native-eva-icons@^1.3.0:
   resolved "https://registry.yarnpkg.com/react-native-eva-icons/-/react-native-eva-icons-1.3.0.tgz#07e1af3db8ed5c29d413b20e76839528fa776c7f"
   integrity sha512-2vIrkOMoIfamirRr2luzlutEISs1kPWoGRIFq+XnNCB0P2RbH4OJ3x8csmeV5rYJVZoUc9/JDKa9esH7OcjkIw==
 
-react-native-fade@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/react-native-fade/-/react-native-fade-2.0.1.tgz#9821b34a2c8e82411f4cf1eec28d3aeef315edb6"
-  integrity sha512-jIjIVMk90hv0QMpO6pjzWqB8QV7BpAuAC9T69TsXC6Eik/BF1XwDo0lVcZkzV+21qZvU61vlfOXuMP4+hf8zgg==
-
 react-native-gesture-handler@~1.5.0:
   version "1.5.6"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.5.6.tgz#5d90145f624e3707db2930f43ab41579683e2375"
@@ -4389,11 +4384,6 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
-
-typescript@^3.8.3:
-  version "3.8.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.8.3.tgz#409eb8544ea0335711205869ec458ab109ee1061"
-  integrity sha512-MYlEfn5VrLNsgudQTVJeNaQFUAI7DkhnOjdpAp4T+ku1TfQClewlbSuTVHiA+8skNBgaf02TL/kLOvig4y3G8w==
 
 ua-parser-js@^0.7.18:
   version "0.7.21"
