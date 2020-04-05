@@ -51,7 +51,7 @@ export default function App() {
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
 **`stories`** | Array of Story | Array | **Required**
-**`onStoryEnd`** | Callback function to be called after all or last item in stories array reaches end | __Optional__
+**`onStoryEnd`** | Callback function to be called after all or last item in stories array reaches end | Function | __Optional__
 
 ## Types
 
@@ -60,9 +60,9 @@ Prop | Description | Type | Default
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
 **`type`** | Type of story | Enum `video` or `img` | **Required**
-**`source`** | URL of video or img | `string` | **Required**
-**`duration`** | Duration of how long an image slide should be shown in millisenconds | `number` | Required for `img` only
-**`action`** | Swipe up action | `array` of `{label: string, url: string}` | __Optional__
+**`source`** | URL of video or img | String | **Required**
+**`duration`** | Duration of how long an image slide should be shown in millisenconds | Number | Required for `img` only
+**`action`** | Swipe up action | Array of `{label: string, url: string}` | __Optional__
 
 ## Todo
 
