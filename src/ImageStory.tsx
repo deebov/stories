@@ -18,10 +18,8 @@ const ImageStory: React.FC<Props> = ({
   setStory,
   onClose,
   snapTonextStory,
-  index,
+  index
 }) => {
-  // console.log(story);
-
   return (
     <SlideWrapper
       start={() => setStory({ ...story, isPlaying: true })}
@@ -29,7 +27,6 @@ const ImageStory: React.FC<Props> = ({
       reset={() => setStory({ ...story, isPlaying: false, isBuffering: false })}
       isBuffering={!!story.isBuffering}
       onClose={onClose}
-      isPlaying={story.isPlaying}
       isActive={isActive}
       action={story.action}
     >
@@ -51,8 +48,8 @@ const styles = StyleSheet.create({
     left: 0,
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
-  },
+    resizeMode: 'cover'
+  }
 });
 
 export default ImageStory;

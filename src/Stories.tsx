@@ -1,10 +1,7 @@
-import React, { Ref, createContext, RefObject } from 'react';
+import React, { createContext, RefObject } from 'react';
 import { StyleSheet, Dimensions, View, Platform } from 'react-native';
 import Indicators from './Indicators';
-import Carousel, {
-  CarouselProperties,
-  CarouselStatic,
-} from 'react-native-snap-carousel';
+import Carousel, { CarouselStatic } from 'react-native-snap-carousel';
 import VideoStory, { Props as VideoProps } from './VideoStory';
 import ImageStory from './ImageStory';
 import { TransitioningView } from 'react-native-reanimated';
@@ -26,7 +23,7 @@ export type Story = {
   };
 };
 
-interface Props {
+export interface Props {
   stories: Story[];
   onClose: () => void;
   onStoryEnd: () => void;
@@ -41,7 +38,7 @@ interface State {
 }
 
 class Stories extends React.Component<Props, State> {
-  carouselRef: RefObject<CarouselStatic<{}>>;
+  carouselRef: RefObject<CarouselStatic<any>>;
   indicatorsRef: RefObject<TransitioningView>;
 
   constructor(props: Props) {
@@ -52,7 +49,7 @@ class Stories extends React.Component<Props, State> {
       reachedEnd: false,
       activeIndexForIndicators: 0,
       stories: [...this.props.stories],
-      data: [...this.props.stories],
+      data: [...this.props.stories]
     };
     this.carouselRef = React.createRef();
     this.indicatorsRef = React.createRef<TransitioningView>();
@@ -83,7 +80,7 @@ class Stories extends React.Component<Props, State> {
 
   onSnapItem = (snapIndex: number) => {
     this.setState({
-      activeIndex: snapIndex,
+      activeIndex: snapIndex
     });
   };
 
@@ -104,13 +101,13 @@ class Stories extends React.Component<Props, State> {
         }
 
         if (changed) {
-          this.setState((prevState) => {
+          this.setState(prevState => {
             const stories = Array.from(prevState.stories);
             stories[index] = story;
             return { stories };
           });
         }
-      },
+      }
     };
 
     return item.type === 'video' ? (
@@ -135,7 +132,6 @@ class Stories extends React.Component<Props, State> {
           horizontal
           swipeThreshold={50}
           shouldOptimizeUpdates={false}
-          // enableMomentum
           decelerationRate={'normal'}
           onBeforeSnapToItem={this.onBeforeSnapItem}
           onSnapToItem={this.onSnapItem}
@@ -163,8 +159,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     borderRadius: 4,
-    overflow: 'hidden',
-  },
+    overflow: 'hidden'
+  }
 });
 
 export default Stories;

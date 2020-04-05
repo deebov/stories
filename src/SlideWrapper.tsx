@@ -6,8 +6,9 @@ import FooterAction from './FooterAction';
 import {
   LongPressGestureHandler,
   State,
-  LongPressGestureHandlerGestureEvent,
+  LongPressGestureHandlerGestureEvent
 } from 'react-native-gesture-handler';
+import { TransitioningView } from 'react-native-reanimated';
 
 export interface Props {
   start: () => any;
@@ -27,9 +28,9 @@ const SlideWrapper: React.FC<Props> = ({
   isActive,
   action,
   children,
-  onClose,
+  onClose
 }) => {
-  const transitionRef = useRef();
+  const transitionRef = useRef<TransitioningView>();
   useEffect(() => {
     if (isActive) {
       if (!isBuffering) {
@@ -47,7 +48,7 @@ const SlideWrapper: React.FC<Props> = ({
   };
 
   const gestureHandler = ({
-    nativeEvent,
+    nativeEvent
   }: LongPressGestureHandlerGestureEvent) => {
     if (nativeEvent.state === State.ACTIVE) {
       if (transitionRef.current) {
@@ -62,7 +63,6 @@ const SlideWrapper: React.FC<Props> = ({
       start();
     }
   };
-  // console.log(isActive, 'SLIDE WRAPPER BUFFERING', isBuffering);
 
   return (
     <View style={styles.container}>
@@ -71,20 +71,14 @@ const SlideWrapper: React.FC<Props> = ({
         minDurationMs={90}
       >
         <View style={styles.container}>
-          <GestureRecognizer
-            // onTouchStart={!isBuffering ? pause : undefined}
-            // onTouchEnd={!isBuffering ? start : undefined}
-            onSwipeUp={onSwipeUp}
-            // onSwipeDown={onClose}
-            style={styles.container}
-          >
+          <GestureRecognizer onSwipeUp={onSwipeUp} style={styles.container}>
             {children}
             <Buffering ref={transitionRef} active={isBuffering} />
           </GestureRecognizer>
         </View>
       </LongPressGestureHandler>
 
-      {action && <FooterAction label={action.label} url='' />}
+      {action && <FooterAction label={action.label} url="" />}
     </View>
   );
 };
@@ -93,8 +87,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    height: '100%',
-  },
+    height: '100%'
+  }
 });
 
 export default SlideWrapper;

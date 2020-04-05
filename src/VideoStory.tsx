@@ -1,9 +1,8 @@
-import React, { useRef, memo, useState } from 'react';
+import React, { useRef, memo } from 'react';
 import { StyleSheet } from 'react-native';
 import { Video } from 'expo-av';
 import { Story } from './Stories';
 import SlideWrapper from './SlideWrapper';
-import debounce from 'debounce';
 
 export interface Props {
   story: Story;
@@ -17,7 +16,7 @@ export interface Props {
 
 const VideoStory: React.FC<Props> = memo(
   ({ index, isActive, story, setStory, snapTonextStory, onClose }) => {
-    const videoRef = useRef();
+    const videoRef = useRef<Video>();
 
     const onStatusChange = (status: any) => {
       const {
@@ -27,7 +26,7 @@ const VideoStory: React.FC<Props> = memo(
         isLooping,
         error,
         isLoaded,
-        isPlaying,
+        isPlaying
       } = status;
 
       if (!isLoaded) {
@@ -64,7 +63,6 @@ const VideoStory: React.FC<Props> = memo(
         videoRef.current.stopAsync();
       }
     };
-    // console.log(story);
 
     return (
       <SlideWrapper
@@ -72,7 +70,6 @@ const VideoStory: React.FC<Props> = memo(
         pause={pause}
         reset={reset}
         isBuffering={!!story.isBuffering}
-        isPlaying={story.isPlaying}
         onClose={onClose}
         isActive={isActive}
         action={story.action}
@@ -81,26 +78,24 @@ const VideoStory: React.FC<Props> = memo(
           progressUpdateIntervalMillis={10000}
           style={styles.video}
           onLoadStart={() => {
-            // setBuffering(true);
             setStory({ ...story, isBuffering: true });
           }}
           onLoad={() => {
-            // setBuffering(false);
             setStory({ ...story, isBuffering: false });
           }}
           onPlaybackStatusUpdate={onStatusChange}
           ref={videoRef}
           source={{
-            uri: story.source,
+            uri: story.source
           }}
-          resizeMode='cover'
+          resizeMode="cover"
           shouldPlay={index === 0 ? true : false}
           isLooping={false}
           isMuted={true}
         />
       </SlideWrapper>
     );
-  },
+  }
 );
 
 const styles = StyleSheet.create({
@@ -109,8 +104,8 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     width: '100%',
-    height: '100%',
-  },
+    height: '100%'
+  }
 });
 
 export default VideoStory;
