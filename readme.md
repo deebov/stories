@@ -6,9 +6,9 @@ Compatible with Expo
 
 ## Todo
 
-[x] - Get rid of react-native-eva-icons and use a sinlge icon
-[] - Add a Close button/icon
-[] - Add an option to pass custom Footer
-[] - Add an option to pass custom Indicators
-[] - Add an option to change Indicators' style and look
-[] - Make a separate package that uses react-native-video
+- [x] Get rid of react-native-eva-icons and use a sinlge icon
+- [ ] Add a Close button/icon
+- [ ] Add an option to pass custom Footer
+- [ ] Add an option to pass custom Indicators
+- [ ] Add an option to change Indicators' style and look
+- [ ] Make a separate package that uses react-native-video
