@@ -1,14 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es2015",
-    "module": "commonjs",
+    "allowSyntheticDefaultImports": true,
     "jsx": "react-native",
-    "declaration": true,
-    "outDir": "./dist",
-    "strict": false,
+    "lib": ["dom", "esnext"],
+    "moduleResolution": "node",
     "noEmit": true,
     "skipLibCheck": true,
-    "esModuleInterop": true
+    "resolveJsonModule": true,
+    "strict": false
   },
-  "exclude": ["example"]
+  "exclude": ["example", "node_modules"]
 }
