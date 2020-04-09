@@ -68,6 +68,7 @@ Prop | Description | Type | Default
 
 - [x] Get rid of react-native-eva-icons and use a sinlge icon
 - [ ] Add a Close button/icon
+- [ ] Multiple stories
 - [ ] Add an option to pass custom Footer
 - [ ] Add an option to pass custom Indicators
 - [ ] Add an option to change Indicators' style and look
