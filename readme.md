@@ -1,4 +1,4 @@
-# Instagram-like stories for Expo React native
+# Vertial stories for React Native/Expo
 
 > Note: This library is under development. Suggestions and PRs are welcomed and appreciated!
 
