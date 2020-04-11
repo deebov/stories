@@ -1,7 +1,7 @@
 {
   "name": "rn-stories",
   "version": "1.0.6",
-  "description": "Instagram-like Stories component. Compatible with Android & iOS.",
+  "description": "Vertical stories component for React native/Expo",
   "main": "src/index.tsx",
   "scripts": {
     "build": "tsc"
