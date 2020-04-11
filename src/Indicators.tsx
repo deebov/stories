@@ -1,6 +1,6 @@
 import React, { memo, useContext, forwardRef, RefObject } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
-import { StoriesContext } from './Stories';
+import { StoriesContext, Indicator as IIndicator } from './Stories';
 import Animated, {
   Easing,
   Transition,
@@ -12,7 +12,7 @@ import { useMemoOne } from 'use-memo-one';
 interface Props {
   activeIndex?: number;
   length: number;
-  ref: RefObject<TransitioningView>;
+  ref?: RefObject<TransitioningView>;
 }
 
 const {
@@ -67,80 +67,103 @@ const runTiming = (
   ]);
 };
 
-const Indicator: React.FC<{ index: number; activeIndex?: number }> = memo(
-  ({ index, activeIndex = 0 }) => {
-    const data = useContext(StoriesContext);
-    const duration = data.indicators[index].duration || 0;
-    const playing = data.indicators[index].isPlaying;
-    let snapToNext = data.snapToNext;
-    const isActive = index === activeIndex;
+const Indicator: React.FC<{
+  index: number;
+  activeIndex?: number;
+  bubbleIndicator?: boolean;
+}> = memo(({ index, bubbleIndicator, activeIndex = 0 }) => {
+  const data = useContext(StoriesContext);
+  const duration = data.indicators[index].duration || 0;
+  const playing = data.indicators[index].isPlaying;
+  let snapToNext = data.snapToNext;
+  const isActive = index === activeIndex;
 
-    const { isPlaying, clock, progress } = useMemoOne(
-      () => ({
-        progress: new Value(0) as Animated.Value<number>,
-        clock: new Clock(),
-        isPlaying: new Value(0) as Animated.Value<number>,
-      }),
-      [index, activeIndex]
-    );
+  const { isPlaying, clock, progress } = useMemoOne(
+    () => ({
+      progress: new Value(0) as Animated.Value<number>,
+      clock: new Clock(),
+      isPlaying: new Value(0) as Animated.Value<number>,
+    }),
+    [index, activeIndex]
+  );
 
-    isPlaying.setValue(playing ? 1 : 0);
-    if (!isActive) {
-      snapToNext = () => {};
-    }
-
-    useCode(
-      () =>
-        block([
-          cond(and(isPlaying, not(clockRunning(clock))), startClock(clock)),
-          cond(and(not(isPlaying), clockRunning(clock)), stopClock(clock)),
-          cond(duration, set(progress, runTiming(clock, duration, snapToNext))),
-        ]),
-      [isPlaying, clock, progress, duration]
-    );
-
-    return (
-      <Animated.View
-        style={[
-          styles.indicatorOverlay,
-          {
-            flex: cond(
-              lessThan(index, activeIndex),
-              1,
-              cond(greaterThan(index, activeIndex), 0, progress)
-            ),
-          },
-        ]}
-      />
-    );
+  isPlaying.setValue(playing ? 1 : 0);
+  if (!isActive) {
+    snapToNext = () => {};
   }
-);
+
+  useCode(
+    () =>
+      block([
+        cond(and(isPlaying, not(clockRunning(clock))), startClock(clock)),
+        cond(and(not(isPlaying), clockRunning(clock)), stopClock(clock)),
+        cond(duration, set(progress, runTiming(clock, duration, snapToNext))),
+      ]),
+    [isPlaying, clock, progress, duration]
+  );
+
+  return (
+    <Animated.View
+      style={[
+        styles.indicatorOverlay,
+        bubbleIndicator ? bubbleStyles.indicator : {},
+        {
+          flex: cond(
+            lessThan(index, activeIndex),
+            1,
+            cond(greaterThan(index, activeIndex), 0, progress)
+          ),
+        },
+      ]}
+    />
+  );
+});
 
 const transition = (
   <Transition.Change durationMs={300} interpolation="easeInOut" />
 );
 
-const Indicators: React.FC<Props> = memo(
+const Indicators: React.FC<Props> = memo(({ activeIndex, length }) => (
+  <View style={styles.container}>
+    {Array(length)
+      .fill('')
+      .map((indicator: IIndicator, idx: number) => (
+        <View
+          key={idx}
+          style={{ ...styles.indicator, marginLeft: idx > 0 ? 5 : 0 }}
+        >
+          <Indicator index={idx} activeIndex={activeIndex} />
+        </View>
+      ))}
+  </View>
+));
+
+export const BubbleIndicators: React.FC<Props> = memo(
   forwardRef<TransitioningView, Props>(({ activeIndex, length }, ref) => {
     return (
       <Transitioning.View
         ref={ref}
         transition={transition}
-        style={styles.container}
+        style={[styles.container, bubbleStyles.container]}
       >
         {Array(length)
           .fill('')
-          .map((indicator: any, idx: number) => {
+          .map((indicator: IIndicator, idx: number) => {
             const isActive = idx === activeIndex;
             return (
               <View
                 key={idx}
                 style={[
-                  { ...styles.indicator, marginLeft: idx > 0 ? 10 : 0 },
-                  { flex: isActive ? 1 : 0 },
+                  styles.indicator,
+                  bubbleStyles.indicator,
+                  { marginLeft: idx > 0 ? 10 : 0, flex: isActive ? 1 : 0 },
                 ]}
               >
-                <Indicator index={idx} activeIndex={activeIndex} />
+                <Indicator
+                  bubbleIndicator
+                  index={idx}
+                  activeIndex={activeIndex}
+                />
               </View>
             );
           })}
@@ -149,15 +172,16 @@ const Indicators: React.FC<Props> = memo(
   })
 );
 
-const width = Dimensions.get('window').width / 1.7;
+const width = Dimensions.get('window').width;
+const bubbleContainerWidth = Dimensions.get('window').width / 1.7;
 const windowWidth = Dimensions.get('window').width / 2;
 
 const styles = StyleSheet.create({
   container: {
     width: width,
-    left: windowWidth - width / 2,
     position: 'absolute',
     top: 20,
+    paddingHorizontal: 20,
     flexDirection: 'row',
     shadowColor: '#000',
     shadowOffset: {
@@ -169,10 +193,9 @@ const styles = StyleSheet.create({
     elevation: 16,
   },
   indicator: {
-    borderRadius: 100,
+    borderRadius: 10,
     flex: 1,
-    height: 10,
-    minWidth: 10,
+    height: 5,
     overflow: 'hidden',
     backgroundColor: 'rgba(0,0,0,.4)',
     flexDirection: 'row',
@@ -180,6 +203,22 @@ const styles = StyleSheet.create({
   indicatorOverlay: {
     backgroundColor: 'white',
     flex: 1,
+    borderRadius: 10,
+  },
+});
+
+const bubbleStyles = StyleSheet.create({
+  container: {
+    width: bubbleContainerWidth,
+    left: windowWidth - bubbleContainerWidth / 2,
+    paddingHorizontal: 0,
+  },
+  indicator: {
+    borderRadius: 100,
+    height: 10,
+    minWidth: 10,
+  },
+  indicatorOverlay: {
     borderRadius: 100,
   },
 });
