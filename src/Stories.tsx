@@ -1,6 +1,6 @@
 import React, { createContext, RefObject } from 'react';
 import { StyleSheet, Dimensions, View, Platform } from 'react-native';
-import Indicators from './Indicators';
+import Indicators, { BubbleIndicators } from './Indicators';
 import Carousel, { CarouselStatic } from 'react-native-snap-carousel';
 import VideoStory, { Props as VideoProps } from './VideoStory';
 import ImageStory from './ImageStory';
@@ -23,6 +23,7 @@ export type Story = {
 
 export interface Props {
   stories: Story[];
+  bubbleIndicators: boolean;
   onClose: () => void;
   onStoryEnd: () => void;
 }
@@ -141,11 +142,18 @@ class Stories extends React.Component<Props, State> {
             snapToNext: this.nextStory,
           }}
         >
-          <Indicators
-            ref={this.indicatorsRef}
-            length={this.state.indicators.length}
-            activeIndex={this.state.activeIndexForIndicators}
-          />
+          {this.props.bubbleIndicators ? (
+            <BubbleIndicators
+              ref={this.indicatorsRef}
+              length={this.state.indicators.length}
+              activeIndex={this.state.activeIndexForIndicators}
+            />
+          ) : (
+            <Indicators
+              length={this.state.indicators.length}
+              activeIndex={this.state.activeIndexForIndicators}
+            />
+          )}
         </StoriesContext.Provider>
       </View>
     );
