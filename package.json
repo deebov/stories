@@ -28,7 +28,6 @@
   "author": "Dilshod Turobov <deebov@yandex.com> (github.com/deebov)",
   "license": "MIT",
   "dependencies": {
-    "@types/react-native-snap-carousel": "^3.8.1",
     "expo-av": "~8.0.0",
     "expo-linear-gradient": "^8.1.0",
     "react-native-gesture-handler": "~1.5.0",
@@ -36,6 +35,7 @@
     "react-native-redash": "^10.0.1",
     "react-native-snap-carousel": "^3.8.4",
     "react-native-swipe-gestures": "^1.0.5",
+    "use-debounce": "^3.4.1",
     "use-memo-one": "^1.1.1"
   },
   "peerDependencies": {
@@ -44,6 +44,7 @@
     "react-native-reanimated": "*"
   },
   "devDependencies": {
+    "@types/react-native-snap-carousel": "^3.8.1",
     "prettier": "1.19.1",
     "react": "16.9.0",
     "react-native": "0.61.5"
