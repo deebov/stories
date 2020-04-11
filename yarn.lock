@@ -1824,6 +1824,14 @@ expand-brackets@^2.1.4:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
+expo-av@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/expo-av/-/expo-av-8.1.0.tgz#376e2a821168cd83e997c6dd84350fab6b293f10"
+  integrity sha512-owWxOCyK+dPyT3pF4rDOf2W8Sn8LSEvfw1HvU9xM0wzH7xF0bw3Zs3wcXxvtfhnXAZ5dCDQfvZI5cXk+lml+IQ==
+  dependencies:
+    lodash "^4.17.15"
+    nullthrows "^1.1.0"
+
 expo-av@~8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/expo-av/-/expo-av-8.0.0.tgz#fc892a0e4ff7e1eff630002e0652da3125d18113"
@@ -1836,6 +1844,14 @@ expo-linear-gradient@^8.1.0:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/expo-linear-gradient/-/expo-linear-gradient-8.1.0.tgz#6933765cf1e76ef2928fd8495e779929699ac4c6"
   integrity sha512-AIy2pOXQRcgk2XE5IgAzd1S2jTFLutiDfveNm6m3fPAk00Rw4qFe98qzte1ayNrGYLJvQ2xq/Y7C0BmBP051mg==
+
+expo-video@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/expo-video/-/expo-video-1.0.2.tgz#5d1e8e9f4068e5f0513001ffe65fddf1fbba03a8"
+  integrity sha512-S7anFxsOWoxl1QUxOO+bmGhSYsHVIiYvYnb6+dtPQDvC8PYyi3GnjLLJkzvLlFB21z0pxjq7tNF8B6xEGOGUWA==
+  dependencies:
+    expo-av "^8.1.0"
+    use-debounce "^3.4.1"
 
 extend-shallow@^1.1.2:
   version "1.1.4"

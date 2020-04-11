@@ -28,8 +28,8 @@
   "author": "Dilshod Turobov <deebov@yandex.com> (github.com/deebov)",
   "license": "MIT",
   "dependencies": {
-    "expo-av": "~8.0.0",
     "expo-linear-gradient": "^8.1.0",
+    "expo-video": "^1.0.2",
     "react-native-gesture-handler": "~1.5.0",
     "react-native-reanimated": "1.4.0",
     "react-native-redash": "^10.0.1",
