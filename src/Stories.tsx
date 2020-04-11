@@ -7,15 +7,13 @@ import ImageStory from './ImageStory';
 import { TransitioningView } from 'react-native-reanimated';
 
 export const StoriesContext = createContext<{
-  stories: Story[];
+  indicators: Indicator[];
   snapToNext: () => void;
-}>({ stories: [], snapToNext: () => {} });
+}>({ indicators: [], snapToNext: () => {} });
 
 export type Story = {
   type: 'video' | 'img';
   source: string;
-  isPlaying?: boolean;
-  isBuffering?: boolean;
   duration?: number;
   action?: {
     label: string;
@@ -33,8 +31,13 @@ interface State {
   activeIndex: number;
   reachedEnd: boolean;
   stories: Story[];
-  data: any;
+  indicators: Indicator[];
   activeIndexForIndicators: number;
+}
+
+export interface Indicator {
+  isPlaying: boolean;
+  duration?: number;
 }
 
 class Stories extends React.Component<Props, State> {
@@ -50,9 +53,12 @@ class Stories extends React.Component<Props, State> {
       reachedEnd: false,
       activeIndexForIndicators: 0,
       stories: [...this.props.stories],
-      data: [...this.props.stories]
+      indicators: this.props.stories.map((s) => ({
+        isPlaying: false,
+        duration: s.duration,
+      })),
     };
-    this.carouselRef = React.createRef();
+    this.carouselRef = React.createRef<CarouselStatic<any>>();
     this.indicatorsRef = React.createRef<TransitioningView>();
   }
 
@@ -80,7 +86,7 @@ class Stories extends React.Component<Props, State> {
 
   onSnapItem = (snapIndex: number) => {
     this.setState({
-      activeIndex: snapIndex
+      activeIndex: snapIndex,
     });
   };
 
@@ -91,22 +97,14 @@ class Stories extends React.Component<Props, State> {
       story: this.state.stories[index],
       isActive: this.state.activeIndex === index,
       snapTonextStory: this.nextStory,
-      setStory: (story: Story) => {
-        let changed = false;
-        for (let key in story) {
-          if (story[key] !== this.state.stories[index][key]) {
-            changed = true;
-          }
-        }
-
-        if (changed) {
-          this.setState(prevState => {
-            const stories = Array.from(prevState.stories);
-            stories[index] = story;
-            return { stories };
-          });
-        }
-      }
+      indicator: this.state.indicators[index],
+      setIndicator: (indicator: Indicator) => {
+        this.setState((prevState) => {
+          const indicators = Array.from(prevState.indicators);
+          indicators[index] = indicator;
+          return { indicators };
+        });
+      },
     };
 
     return item.type === 'video' ? (
@@ -138,11 +136,14 @@ class Stories extends React.Component<Props, State> {
         />
 
         <StoriesContext.Provider
-          value={{ stories: this.state.stories, snapToNext: this.nextStory }}
+          value={{
+            indicators: this.state.indicators,
+            snapToNext: this.nextStory,
+          }}
         >
           <Indicators
             ref={this.indicatorsRef}
-            length={this.state.data.length}
+            length={this.state.indicators.length}
             activeIndex={this.state.activeIndexForIndicators}
           />
         </StoriesContext.Provider>
@@ -157,8 +158,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     borderRadius: 4,
-    overflow: 'hidden'
-  }
+    overflow: 'hidden',
+  },
 });
 
 export default Stories;

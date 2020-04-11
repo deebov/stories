@@ -1,101 +1,75 @@
-import React, { useRef, memo } from 'react';
+import React, { useRef, memo, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { Video } from 'expo-av';
-import { Story } from './Stories';
+import { Story, Indicator } from './Stories';
 import SlideWrapper from './SlideWrapper';
+import Video from './Video';
+import { Video as AVideo } from 'expo-av';
 
 export interface Props {
   story: Story;
   isActive: boolean;
   index: number;
+  indicator: Indicator;
 
-  setStory: (story: Story) => void;
+  setIndicator: (indicator: Indicator) => void;
   snapTonextStory: () => void;
   onClose: () => void;
 }
 
 const VideoStory: React.FC<Props> = memo(
-  ({ index, isActive, story, setStory, snapTonextStory, onClose }) => {
-    const videoRef = useRef<Video>();
+  ({
+    index,
+    isActive,
+    story,
+    setIndicator,
+    snapTonextStory,
+    onClose,
+    indicator,
+  }) => {
+    const videoRef = useRef<AVideo>();
+    const [paused, setPaused] = useState(true);
+    const [buffering, setBuffering] = useState(false);
 
-    const onStatusChange = (status: any) => {
-      const {
-        isBuffering,
-        durationMillis,
-        didJustFinish,
-        isLooping,
-        error,
-        isLoaded,
-        isPlaying
-      } = status;
-
-      if (!isLoaded) {
-        if (error) {
-          console.log(`Encountered a fatal error during playback: ${error}`);
-        }
-      } else {
-        const updatedStory = { ...story };
-
-        updatedStory.isPlaying = isPlaying;
-        updatedStory.duration = durationMillis;
-        updatedStory.isBuffering = isBuffering;
-
-        setStory(updatedStory);
-
-        if (didJustFinish && !isLooping) {
-          snapTonextStory();
-        }
-      }
-    };
-
-    const pause = () => {
-      if (videoRef.current) {
-        videoRef.current.pauseAsync();
-      }
-    };
-    const play = () => {
-      if (videoRef.current) {
-        videoRef.current.playAsync();
-      }
-    };
     const reset = () => {
-      if (videoRef.current) {
-        videoRef.current.stopAsync();
-      }
+      setPaused(true);
+      videoRef.current?.stopAsync();
     };
 
     return (
       <SlideWrapper
-        start={play}
-        pause={pause}
+        start={() => setPaused(false)}
+        pause={() => setPaused(true)}
         reset={reset}
-        isBuffering={!!story.isBuffering}
+        isBuffering={buffering}
         onClose={onClose}
         isActive={isActive}
         action={story.action}
       >
         <Video
-          progressUpdateIntervalMillis={10000}
+          onFinish={snapTonextStory}
+          paused={paused}
           style={styles.video}
-          onLoadStart={() => {
-            setStory({ ...story, isBuffering: true });
+          onPlay={(p) => setIndicator({ ...indicator, isPlaying: p })}
+          onBuffer={setBuffering}
+          onLoad={(status) => {
+            if (status.isLoaded) {
+              setIndicator({ ...indicator, duration: status.durationMillis });
+            }
           }}
-          onLoad={() => {
-            setStory({ ...story, isBuffering: false });
-          }}
-          onPlaybackStatusUpdate={onStatusChange}
           ref={videoRef}
           source={{
-            uri: story.source
+            uri: story.source,
           }}
           resizeMode="cover"
           shouldPlay={index === 0 ? true : false}
           isLooping={false}
-          isMuted={false}
+          isMuted={true}
         />
       </SlideWrapper>
     );
-  }
+  },
+  // Re-render if isActive has changed
+  (prevProps, nextProps) => prevProps.isActive === nextProps.isActive
 );
 
 const styles = StyleSheet.create({
@@ -104,8 +78,8 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     width: '100%',
-    height: '100%'
-  }
+    height: '100%',
+  },
 });
 
 export default VideoStory;

@@ -1,49 +1,42 @@
-import React from 'react';
+import React, { useState, memo } from 'react';
 import { StyleSheet, Image } from 'react-native';
-import { Story } from './Stories';
 import SlideWrapper from './SlideWrapper';
+import { Props } from './VideoStory';
 
-export interface Props {
-  story: Story;
-  isActive: boolean;
-  index: number;
-  setStory: (story: Story) => void;
-  snapTonextStory: () => void;
-  onClose: () => void;
-}
-
-const ImageStory: React.FC<Props> = ({
-  isActive,
-  story,
-  setStory,
-  onClose,
-  snapTonextStory,
-  index
-}) => {
-  return (
-    <SlideWrapper
-      start={() => setStory({ ...story, isPlaying: true })}
-      pause={() => setStory({ ...story, isPlaying: false })}
-      reset={() => setStory({ ...story, isPlaying: false, isBuffering: false })}
-      isBuffering={!!story.isBuffering}
-      onClose={onClose}
-      isActive={isActive}
-      action={story.action}
-    >
-      <Image
-        source={{ uri: story.source }}
-        style={styles.image}
-        onLoadStart={() =>
-          setStory({ ...story, isBuffering: true, isPlaying: false })
-        }
-        onLoad={() =>
-          setStory({ ...story, isBuffering: false, isPlaying: true })
-        }
-        onError={console.log}
-      />
-    </SlideWrapper>
-  );
-};
+const ImageStory: React.FC<Props> = memo(
+  ({ isActive, story, setIndicator, onClose, indicator }) => {
+    const [buffering, setBuffering] = useState(false);
+    return (
+      <SlideWrapper
+        start={() => setIndicator({ ...indicator, isPlaying: true })}
+        pause={() => setIndicator({ ...indicator, isPlaying: false })}
+        reset={() => {
+          setIndicator({ ...indicator, isPlaying: false });
+          setBuffering(false);
+        }}
+        isBuffering={buffering}
+        onClose={onClose}
+        isActive={isActive}
+        action={story.action}
+      >
+        <Image
+          source={{ uri: story.source }}
+          style={styles.image}
+          onLoadStart={() => {
+            setBuffering(true);
+            setIndicator({ ...indicator, isPlaying: false });
+          }}
+          onLoad={() => {
+            setBuffering(false);
+            setIndicator({ ...indicator, isPlaying: true });
+          }}
+          onError={console.log}
+        />
+      </SlideWrapper>
+    );
+  }, // Re-render if isActive has changed
+  (prevProps, nextProps) => prevProps.isActive === nextProps.isActive
+);
 
 const styles = StyleSheet.create({
   image: {
@@ -52,8 +45,8 @@ const styles = StyleSheet.create({
     left: 0,
     width: '100%',
     height: '100%',
-    resizeMode: 'cover'
-  }
+    resizeMode: 'cover',
+  },
 });
 
 export default ImageStory;

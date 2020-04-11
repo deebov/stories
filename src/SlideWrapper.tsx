@@ -6,7 +6,7 @@ import FooterAction from './FooterAction';
 import {
   LongPressGestureHandler,
   State,
-  LongPressGestureHandlerGestureEvent
+  LongPressGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler';
 import { TransitioningView } from 'react-native-reanimated';
 
@@ -28,18 +28,16 @@ const SlideWrapper: React.FC<Props> = ({
   isActive,
   action,
   children,
-  onClose
+  onClose,
 }) => {
   const transitionRef = useRef<TransitioningView>();
   useEffect(() => {
     if (isActive) {
-      if (!isBuffering) {
-        start();
-      }
+      start();
     } else {
       reset();
     }
-  }, [isActive, isBuffering]);
+  }, [isActive]);
 
   const onSwipeUp = () => {
     if (action && action.url) {
@@ -48,7 +46,7 @@ const SlideWrapper: React.FC<Props> = ({
   };
 
   const gestureHandler = ({
-    nativeEvent
+    nativeEvent,
   }: LongPressGestureHandlerGestureEvent) => {
     if (nativeEvent.state === State.ACTIVE) {
       if (transitionRef.current) {
@@ -87,8 +85,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    height: '100%'
-  }
+    height: '100%',
+  },
 });
 
 export default SlideWrapper;

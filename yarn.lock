@@ -3612,11 +3612,6 @@ react-is@^16.12.0, react-is@^16.8.1, react-is@^16.8.4:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
-react-native-eva-icons@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/react-native-eva-icons/-/react-native-eva-icons-1.3.0.tgz#07e1af3db8ed5c29d413b20e76839528fa776c7f"
-  integrity sha512-2vIrkOMoIfamirRr2luzlutEISs1kPWoGRIFq+XnNCB0P2RbH4OJ3x8csmeV5rYJVZoUc9/JDKa9esH7OcjkIw==
-
 react-native-gesture-handler@~1.5.0:
   version "1.5.6"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.5.6.tgz#5d90145f624e3707db2930f43ab41579683e2375"
@@ -4463,6 +4458,11 @@ urix@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/urix/-/urix-0.1.0.tgz#da937f7a62e21fec1fd18d49b35c2935067a6c72"
   integrity sha1-2pN/emLiH+wf0Y1Js1wpNQZ6bHI=
+
+use-debounce@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-3.4.1.tgz#361a20e583c1bd4a44f8b29a26793a52a0b84d2c"
+  integrity sha512-KHZPsL+cZvOt/ZAsHTcoAK65ImXU0iG9FDeofuj9uJTdUULF6Gjws8HpK+JlIjZpZ7LTqPHZtEknc+Im4cB3AA==
 
 use-memo-one@^1.1.1:
   version "1.1.1"
