@@ -28,6 +28,7 @@
   "author": "Dilshod Turobov <deebov@yandex.com> (github.com/deebov)",
   "license": "MIT",
   "dependencies": {
+    "expo-haptics": "^8.1.0",
     "expo-linear-gradient": "^8.1.0",
     "expo-video": "^1.0.2",
     "react-native-gesture-handler": "~1.5.0",
