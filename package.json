@@ -1,6 +1,6 @@
 {
   "name": "rn-stories",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Vertical stories component for React native/Expo",
   "main": "src/index.tsx",
   "scripts": {
