@@ -6,9 +6,11 @@
 ## Demo
 
 **Instagram**
+<br />
 ![](./examples/assets/instagram_demo.gif)
 
 **Modal**
+<br />
 ![](./examples/assets/modal_demo.gif)
 
 ## Install
@@ -60,7 +62,9 @@ export default function App() {
 Prop | Description | Type | Default
 ------ | ------ | ------ | ------
 **`stories`** | Array of Story | Array | **Required**
-**`onStoryEnd`** | Callback function to be called after all or last item in stories array reaches end | Function | __Optional__
+**`firstItem`** | Index of a slide to be shown first | number | 0
+**`onStoryEnd`** | Callback function to be called after nested story reaches end | Function | __Optional__
+**`onAllEnd`** | Callback function to be called after the last story reaches end | Function | __Optional__
 
 ## Types
 
@@ -77,7 +81,7 @@ Prop | Description | Type | Default
 
 - [x] Get rid of react-native-eva-icons and use a sinlge icon
 - [ ] Add a Close button/icon
-- [ ] Multiple stories
+- [x] Multiple stories
 - [ ] Add an option to pass custom Footer
 - [ ] Add an option to pass custom Indicators
 - [ ] Add an option to change Indicators' style and look
