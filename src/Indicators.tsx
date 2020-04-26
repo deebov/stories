@@ -1,6 +1,6 @@
-import React, { memo, useContext, forwardRef, RefObject } from 'react';
+import React, { forwardRef, RefObject } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
-import { StoriesContext, Indicator as IIndicator } from './Stories';
+import { Indicator as IIndicator } from './Stories';
 import Animated, {
   Easing,
   Transition,
@@ -8,12 +8,6 @@ import Animated, {
   TransitioningView,
 } from 'react-native-reanimated';
 import { useMemoOne } from 'use-memo-one';
-
-interface Props {
-  activeIndex?: number;
-  length: number;
-  ref?: RefObject<TransitioningView>;
-}
 
 const {
   Clock,
@@ -30,17 +24,9 @@ const {
   timing,
   eq,
   call,
-  greaterThan,
-  lessThan,
 } = Animated;
 
-const runTiming = (
-  clock: Animated.Clock,
-  duration: number,
-  callback: () => void
-) => {
-  const snapped = new Value(0);
-
+const runTiming = (clock: Animated.Clock, duration: number) => {
   const state = {
     time: new Value(0),
     position: new Value(0),
@@ -59,48 +45,36 @@ const runTiming = (
       set(state.time, 0),
       timing(clock, state, config)
     ),
-    cond(and(state.finished, eq(snapped, 0)), [
-      call([], callback),
-      set(snapped, 1),
-    ]),
     state.position,
   ]);
 };
 
-const Indicator: React.FC<{
-  index: number;
-  activeIndex?: number;
+const AnimatedIndicator: React.FC<{
+  isPlaying: boolean;
+  duration: number;
   bubbleIndicator?: boolean;
-}> = memo(({ index, bubbleIndicator, activeIndex = 0 }) => {
-  const data = useContext(StoriesContext);
-  const duration = data.indicators[index].duration || 0;
-  const playing = data.indicators[index].isPlaying;
-  let snapToNext = data.snapToNext;
-  const isActive = index === activeIndex;
-
-  const { isPlaying, clock, progress } = useMemoOne(
+  progress: Animated.Value<number>;
+}> = ({ bubbleIndicator, duration, isPlaying: playing, progress }) => {
+  duration = duration || 0;
+  const { isPlaying, clock } = useMemoOne(
     () => ({
-      progress: new Value(0) as Animated.Value<number>,
       clock: new Clock(),
       isPlaying: new Value(0) as Animated.Value<number>,
     }),
-    [index, activeIndex]
+    []
   );
-
-  isPlaying.setValue(playing ? 1 : 0);
-  if (!isActive) {
-    snapToNext = () => {};
-  }
 
   useCode(
     () =>
       block([
         cond(and(isPlaying, not(clockRunning(clock))), startClock(clock)),
         cond(and(not(isPlaying), clockRunning(clock)), stopClock(clock)),
-        cond(duration, set(progress, runTiming(clock, duration, snapToNext))),
+        cond(duration, set(progress, runTiming(clock, duration))),
       ]),
-    [isPlaying, clock, progress, duration]
+    [isPlaying, clock, duration]
   );
+
+  useCode(() => set(isPlaying, Number(playing)), [playing]);
 
   return (
     <Animated.View
@@ -108,45 +82,72 @@ const Indicator: React.FC<{
         styles.indicatorOverlay,
         bubbleIndicator ? bubbleStyles.indicator : {},
         {
-          flex: cond(
-            lessThan(index, activeIndex),
-            1,
-            cond(greaterThan(index, activeIndex), 0, progress)
-          ),
+          flex: progress,
         },
       ]}
     />
   );
-});
+};
+
+const Indicator = (props) => (
+  <View
+    style={[
+      styles.indicatorOverlay,
+      {
+        flex: props.width,
+      },
+    ]}
+  />
+);
+
+interface Props {
+  activeIndex?: number;
+  quantity: number;
+  bubbleIndicators: boolean;
+  snapToNext: () => void;
+  playing: boolean;
+  duration: number;
+
+  ref?: RefObject<TransitioningView>;
+}
 
 const transition = (
   <Transition.Change durationMs={300} interpolation="easeInOut" />
 );
 
-const Indicators: React.FC<Props> = memo(({ activeIndex, length }) => (
-  <View style={styles.container}>
-    {Array(length)
-      .fill('')
-      .map((indicator: IIndicator, idx: number) => (
-        <View
-          key={idx}
-          style={{ ...styles.indicator, marginLeft: idx > 0 ? 5 : 0 }}
-        >
-          <Indicator index={idx} activeIndex={activeIndex} />
-        </View>
-      ))}
-  </View>
-));
+const Indicators: React.FC<Props> = forwardRef<TransitioningView, Props>(
+  (
+    { activeIndex, quantity, snapToNext, playing, duration, bubbleIndicators },
+    ref
+  ) => {
+    const { progress, snapped } = useMemoOne(
+      () => ({
+        progress: new Value(0) as Animated.Value<number>,
+        snapped: new Value(0),
+      }),
+      [activeIndex]
+    );
 
-export const BubbleIndicators: React.FC<Props> = memo(
-  forwardRef<TransitioningView, Props>(({ activeIndex, length }, ref) => {
+    useCode(
+      () =>
+        block([
+          cond(and(eq(progress, 1), eq(snapped, 0)), [
+            set(snapped, 1),
+            call([], snapToNext),
+          ]),
+        ]),
+      [snapped]
+    );
     return (
       <Transitioning.View
         ref={ref}
         transition={transition}
-        style={[styles.container, bubbleStyles.container]}
+        style={[
+          styles.container,
+          bubbleIndicators ? bubbleStyles.container : {},
+        ]}
       >
-        {Array(length)
+        {Array(quantity)
           .fill('')
           .map((indicator: IIndicator, idx: number) => {
             const isActive = idx === activeIndex;
@@ -155,21 +156,29 @@ export const BubbleIndicators: React.FC<Props> = memo(
                 key={idx}
                 style={[
                   styles.indicator,
-                  bubbleStyles.indicator,
-                  { marginLeft: idx > 0 ? 10 : 0, flex: isActive ? 1 : 0 },
+                  bubbleIndicators ? bubbleStyles.indicator : {},
+                  {
+                    marginLeft: idx > 0 ? 10 : 0,
+                    flex: bubbleIndicators ? (isActive ? 1 : 0) : 1,
+                  },
                 ]}
               >
-                <Indicator
-                  bubbleIndicator
-                  index={idx}
-                  activeIndex={activeIndex}
-                />
+                {idx === activeIndex ? (
+                  <AnimatedIndicator
+                    progress={progress}
+                    bubbleIndicator={bubbleIndicators}
+                    isPlaying={playing}
+                    duration={duration}
+                  />
+                ) : (
+                  <Indicator width={idx > activeIndex ? 0 : 1} />
+                )}
               </View>
             );
           })}
       </Transitioning.View>
     );
-  })
+  }
 );
 
 const width = Dimensions.get('window').width;

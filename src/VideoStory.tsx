@@ -7,24 +7,13 @@ import Video from 'expo-video';
 export interface Props {
   story: Story;
   isActive: boolean;
-  index: number;
-  indicator: Indicator;
 
-  setIndicator: (indicator: Indicator) => void;
-  snapTonextStory: () => void;
+  setIndicator: (indicator: Partial<Indicator>) => void;
   onClose: () => void;
 }
 
 const VideoStory: React.FC<Props> = memo(
-  ({
-    index,
-    isActive,
-    story,
-    setIndicator,
-    snapTonextStory,
-    onClose,
-    indicator
-  }) => {
+  ({ isActive, story, setIndicator, onClose }) => {
     const videoRef = useRef<Video>();
     const [paused, setPaused] = useState(true);
     const [buffering, setBuffering] = useState(false);
@@ -45,22 +34,21 @@ const VideoStory: React.FC<Props> = memo(
         action={story.action}
       >
         <Video
-          onEnd={snapTonextStory}
           paused={paused}
           style={styles.video}
-          onPlay={p => setIndicator({ ...indicator, isPlaying: p })}
+          onPlay={(p) => setIndicator({ isPlaying: p })}
           onBuffer={setBuffering}
-          onLoad={status => {
+          onLoad={(status) => {
             if (status.isLoaded) {
-              setIndicator({ ...indicator, duration: status.durationMillis });
+              setIndicator({ duration: status.durationMillis });
             }
           }}
           ref={videoRef}
           source={{
-            uri: story.source
+            uri: story.source,
           }}
           resizeMode="cover"
-          shouldPlay={index === 0 ? true : false}
+          shouldPlay={isActive}
           isLooping={false}
           isMuted={true}
         />
@@ -77,8 +65,8 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     width: '100%',
-    height: '100%'
-  }
+    height: '100%',
+  },
 });
 
 export default VideoStory;

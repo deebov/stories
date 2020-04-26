@@ -7,14 +7,16 @@ import {
   LongPressGestureHandler,
   State,
   LongPressGestureHandlerGestureEvent,
+  TapGestureHandler,
+  TapGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler';
-import { TransitioningView } from 'react-native-reanimated';
 
 export interface Props {
   start: () => any;
   pause: () => any;
   reset: () => any;
   onClose: () => any;
+  tapHandler?: (event: TapGestureHandlerGestureEvent) => any;
   action: any;
   isBuffering: boolean;
   isActive: boolean;
@@ -23,21 +25,18 @@ export interface Props {
 const SlideWrapper: React.FC<Props> = ({
   start,
   pause,
-  reset,
   isBuffering,
-  isActive,
   action,
   children,
-  onClose,
+  tapHandler,
 }) => {
-  const transitionRef = useRef<TransitioningView>();
-  useEffect(() => {
-    if (isActive) {
-      start();
-    } else {
-      reset();
-    }
-  }, [isActive]);
+  // useEffect(() => {
+  //   if (isActive) {
+  //     start();
+  //   } else {
+  //     reset();
+  //   }
+  // }, [isActive]);
 
   const onSwipeUp = () => {
     if (action && action.url) {
@@ -49,35 +48,32 @@ const SlideWrapper: React.FC<Props> = ({
     nativeEvent,
   }: LongPressGestureHandlerGestureEvent) => {
     if (nativeEvent.state === State.ACTIVE) {
-      if (transitionRef.current) {
-        transitionRef.current.animateNextTransition();
-      }
       pause();
     }
     if (nativeEvent.state === State.END) {
-      if (transitionRef.current) {
-        transitionRef.current.animateNextTransition();
-      }
       start();
     }
   };
 
   return (
-    <View style={styles.container}>
-      <LongPressGestureHandler
-        onHandlerStateChange={gestureHandler}
-        minDurationMs={90}
+    <LongPressGestureHandler
+      onHandlerStateChange={gestureHandler}
+      minDurationMs={70}
+    >
+      <TapGestureHandler
+        maxDurationMs={100}
+        maxDist={10}
+        onHandlerStateChange={tapHandler}
       >
         <View style={styles.container}>
           <GestureRecognizer onSwipeUp={onSwipeUp} style={styles.container}>
             {children}
-            <Buffering ref={transitionRef} active={isBuffering} />
           </GestureRecognizer>
+          {isBuffering && <Buffering active={true} />}
+          {action && <FooterAction label={action.label} url="" />}
         </View>
-      </LongPressGestureHandler>
-
-      {action && <FooterAction label={action.label} url="" />}
-    </View>
+      </TapGestureHandler>
+    </LongPressGestureHandler>
   );
 };
 
