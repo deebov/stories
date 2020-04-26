@@ -2,6 +2,15 @@
 
 > Note: This library is under development. Suggestions and PRs are welcomed and appreciated!
 
+
+## Demo
+
+**Instagram**
+![](./examples/assets/instagram_demo.gif)
+
+**Modal**
+![](./examples/assets/modal_demo.gif)
+
 ## Install
 ```bash
 yarn add rn-stories

@@ -189,13 +189,15 @@ class NestedStory extends React.Component<Props, State> {
     }
     if (!this.props.isActive && this.hasStarted) {
       this.playbackInstance.current?.stopAsync();
-      this.setState({
-        currentIndex: 0,
-        paused: true,
-        playing: false,
-        buffering: false,
-      });
-      this.hasStarted = false;
+      this.setState(
+        {
+          currentIndex: 0,
+          paused: true,
+          playing: false,
+          buffering: false,
+        },
+        () => (this.hasStarted = false)
+      );
     }
   }
 
@@ -221,7 +223,7 @@ class NestedStory extends React.Component<Props, State> {
                 headers: { 'cache-control': 'max-age=300' },
               }}
               key={this.state.currentIndex}
-              shouldPlay={this.props.isActive}
+              shouldPlay={this.hasStarted}
               isMuted={true}
               isLooping={false}
               style={styles.video}
@@ -247,8 +249,7 @@ class NestedStory extends React.Component<Props, State> {
               onLoad={() =>
                 this.setState({
                   buffering: false,
-                  playing: true,
-                  paused: false,
+                  playing: this.hasStarted,
                   duration: slide.duration,
                 })
               }

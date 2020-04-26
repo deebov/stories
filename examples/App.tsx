@@ -3,7 +3,7 @@ import Modal from './src/Modal';
 import Instagram from './src/Instagram';
 
 const App = () => {
-  return <Modal />;
+  return <Instagram />;
 };
 
 export default App;

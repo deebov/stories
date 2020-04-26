@@ -1,6 +1,6 @@
 {
   "name": "rn-stories",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Vertical stories component for React native/Expo",
   "main": "src/index.tsx",
   "scripts": {
@@ -31,6 +31,7 @@
     "expo-haptics": "^8.1.0",
     "expo-linear-gradient": "^8.1.0",
     "expo-video": "^1.0.2",
+    "memoize-one": "^5.1.1",
     "react-native-gesture-handler": "~1.5.0",
     "react-native-reanimated": "1.4.0",
     "react-native-redash": "^10.0.1",

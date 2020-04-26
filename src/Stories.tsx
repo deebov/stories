@@ -165,6 +165,7 @@ class Stories extends React.Component<Props, State> {
           inactiveSlideOpacity={1}
           inactiveSlideScale={1}
           firstItem={this.props.firstItem}
+          removeClippedSubviews={true}
         />
         {!this.props.nestedStories && (
           <Indicators
