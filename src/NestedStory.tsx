@@ -108,7 +108,7 @@ class NestedStory extends React.Component<Props, State> {
           ),
         });
       } else {
-        if (this.props.isLast) {
+        if (this.props.isLast && typeof this.props.onEnd === 'function') {
           this.props.onEnd();
         } else {
           this.props.snapToNext();
@@ -256,7 +256,7 @@ class NestedStory extends React.Component<Props, State> {
           )}
         </SlideWrapper>
         <Indicators
-          bubbleIndicators={this.props.bubbleIndicators}
+          bubbleIndicators={false}
           quantity={this.props.slides.length}
           activeIndex={this.state.currentIndex}
           snapToNext={this.snapToNext}

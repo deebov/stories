@@ -27,11 +27,12 @@ export type Story = Slide & { children?: Slide[] };
 
 export interface Props {
   stories: Story[];
-  bubbleIndicators: boolean;
+  bubbleIndicators?: boolean;
   nestedStories?: boolean;
-  onClose: () => void;
-  onStoryEnd: () => void;
-  onAllEnd: () => void;
+  firstItem?: number;
+  onClose?: () => void;
+  onStoryEnd?: () => void;
+  onAllEnd?: () => void;
 }
 
 interface State {
@@ -56,7 +57,7 @@ class Stories extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      activeIndex: 0,
+      activeIndex: this.props.firstItem || 0,
       reachedEnd: false,
       activeIndexForIndicators: 0,
       stories: [...this.props.stories],
@@ -163,6 +164,7 @@ class Stories extends React.Component<Props, State> {
           onSnapToItem={this.onSnapItem}
           inactiveSlideOpacity={1}
           inactiveSlideScale={1}
+          firstItem={this.props.firstItem}
         />
         {!this.props.nestedStories && (
           <Indicators
