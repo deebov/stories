@@ -6,9 +6,11 @@
 ## Demo
 
 **Instagram**
+<br />
 ![](./examples/assets/instagram_demo.gif)
 
 **Modal**
+<br />
 ![](./examples/assets/modal_demo.gif)
 
 ## Install
