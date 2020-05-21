@@ -2,7 +2,7 @@ import React, { createContext, RefObject } from 'react';
 import { StyleSheet, Dimensions, View, Platform } from 'react-native';
 import Indicators from './Indicators';
 import Carousel, { CarouselStatic } from 'react-native-snap-carousel';
-import VideoStory, { Props as VideoProps } from './VideoStory';
+import VideoStory, { SlideProps } from './VideoStory';
 import ImageStory from './ImageStory';
 import { TransitioningView } from 'react-native-reanimated';
 import NestedStory from './NestedStory';
@@ -30,6 +30,10 @@ export interface Props {
   bubbleIndicators?: boolean;
   nestedStories?: boolean;
   firstItem?: number;
+  headers?: {
+    [key: string]: string;
+  };
+  
   onClose?: () => void;
   onStoryEnd?: () => void;
   onAllEnd?: () => void;
@@ -78,18 +82,11 @@ class Stories extends React.Component<Props, State> {
       this.props?.onAllEnd();
       this.setState({ reachedEnd: true });
     } else {
-      // Haptics.impactAsync(
-      //   Haptics.ImpactFeedbackStyle[
-      //     this.props.nestedStories ? 'Medium' : 'Light'
-      //   ]
-      // );
       this.carouselRef.current.snapToNext();
     }
   };
+
   previousStory = () => {
-    // Haptics.impactAsync(
-    //   Haptics.ImpactFeedbackStyle[this.props.nestedStories ? 'Medium' : 'Light']
-    // );
     this.carouselRef.current.snapToPrev();
   };
 
@@ -112,10 +109,11 @@ class Stories extends React.Component<Props, State> {
   };
 
   renderItem = ({ item, index }: { item: Story; index: number }) => {
-    const props: VideoProps = {
+    const props: SlideProps = {
       onClose: this.props.onClose,
       story: this.state.stories[index],
       isActive: this.state.activeIndex === index,
+      headers: this.props.headers,
       setIndicator: (indicator: Indicator) => {
         this.setState((prevState) => {
           const indicators = Array.from(prevState.indicators);
@@ -128,6 +126,7 @@ class Stories extends React.Component<Props, State> {
     if (this.props.nestedStories) {
       return (
         <NestedStory
+          headers={this.props.headers}
           bubbleIndicators={false}
           isLast={index === this.state.stories.length - 1}
           isActive={this.state.activeIndex === index}
@@ -167,6 +166,7 @@ class Stories extends React.Component<Props, State> {
           firstItem={this.props.firstItem}
           removeClippedSubviews={true}
         />
+
         {!this.props.nestedStories && (
           <Indicators
             ref={this.indicatorsRef}

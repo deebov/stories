@@ -1,104 +1,17 @@
 import React, { forwardRef, RefObject } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
-import { Indicator as IIndicator } from './Stories';
 import Animated, {
-  Easing,
   Transition,
   Transitioning,
   TransitioningView,
 } from 'react-native-reanimated';
 import { useMemoOne } from 'use-memo-one';
 
-const {
-  Clock,
-  Value,
-  useCode,
-  set,
-  block,
-  cond,
-  startClock,
-  stopClock,
-  clockRunning,
-  and,
-  not,
-  timing,
-  eq,
-  call,
-} = Animated;
+import { Indicator as IIndicator } from '../Stories';
+import AnimatedIndicator from './AnimatedIndicator';
+import Indicator from './Indicator';
 
-const runTiming = (clock: Animated.Clock, duration: number) => {
-  const state = {
-    time: new Value(0),
-    position: new Value(0),
-    finished: new Value(0),
-    frameTime: new Value(0),
-  };
-
-  const config = {
-    duration: duration,
-    toValue: new Value(1),
-    easing: Easing.linear,
-  };
-  return block([
-    cond(
-      not(clockRunning(clock)),
-      set(state.time, 0),
-      timing(clock, state, config)
-    ),
-    state.position,
-  ]);
-};
-
-const AnimatedIndicator: React.FC<{
-  isPlaying: boolean;
-  duration: number;
-  bubbleIndicator?: boolean;
-  progress: Animated.Value<number>;
-}> = ({ bubbleIndicator, duration, isPlaying: playing, progress }) => {
-  duration = duration || 0;
-  const { isPlaying, clock } = useMemoOne(
-    () => ({
-      clock: new Clock(),
-      isPlaying: new Value(0) as Animated.Value<number>,
-    }),
-    []
-  );
-
-  useCode(
-    () =>
-      block([
-        cond(and(isPlaying, not(clockRunning(clock))), startClock(clock)),
-        cond(and(not(isPlaying), clockRunning(clock)), stopClock(clock)),
-        cond(duration, set(progress, runTiming(clock, duration))),
-      ]),
-    [isPlaying, clock, duration]
-  );
-
-  useCode(() => set(isPlaying, Number(playing)), [playing]);
-
-  return (
-    <Animated.View
-      style={[
-        styles.indicatorOverlay,
-        bubbleIndicator ? bubbleStyles.indicator : {},
-        {
-          flex: progress,
-        },
-      ]}
-    />
-  );
-};
-
-const Indicator = (props) => (
-  <View
-    style={[
-      styles.indicatorOverlay,
-      {
-        flex: props.width,
-      },
-    ]}
-  />
-);
+const { Value, useCode, set, block, cond, and, eq, call } = Animated;
 
 interface Props {
   activeIndex?: number;
@@ -115,7 +28,7 @@ const transition = (
   <Transition.Change durationMs={300} interpolation="easeInOut" />
 );
 
-const Indicators: React.FC<Props> = forwardRef<TransitioningView, Props>(
+const Indicators = forwardRef<TransitioningView, Props>(
   (
     { activeIndex, quantity, snapToNext, playing, duration, bubbleIndicators },
     ref
@@ -209,11 +122,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,.4)',
     flexDirection: 'row',
   },
-  indicatorOverlay: {
-    backgroundColor: 'white',
-    flex: 1,
-    borderRadius: 10,
-  },
 });
 
 const bubbleStyles = StyleSheet.create({
@@ -226,9 +134,6 @@ const bubbleStyles = StyleSheet.create({
     borderRadius: 100,
     height: 10,
     minWidth: 10,
-  },
-  indicatorOverlay: {
-    borderRadius: 100,
   },
 });
 

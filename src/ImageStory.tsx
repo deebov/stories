@@ -1,11 +1,12 @@
 import React, { useState, memo } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import SlideWrapper from './SlideWrapper';
-import { Props } from './VideoStory';
+import { SlideProps } from './VideoStory';
 
-const ImageStory: React.FC<Props> = ({
+const ImageStory: React.FC<SlideProps> = ({
   isActive,
   story,
+  headers,
   setIndicator,
   onClose,
 }) => {
@@ -24,7 +25,7 @@ const ImageStory: React.FC<Props> = ({
       action={story.action}
     >
       <Image
-        source={{ uri: story.source }}
+        source={{ uri: story.source, headers: headers }}
         style={styles.image}
         onLoadStart={() => {
           setBuffering(true);

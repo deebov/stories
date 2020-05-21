@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import { Linking, StyleSheet, View } from 'react-native';
 import Buffering from './Buffering';
@@ -30,14 +30,6 @@ const SlideWrapper: React.FC<Props> = ({
   children,
   tapHandler,
 }) => {
-  // useEffect(() => {
-  //   if (isActive) {
-  //     start();
-  //   } else {
-  //     reset();
-  //   }
-  // }, [isActive]);
-
   const onSwipeUp = () => {
     if (action && action.url) {
       Linking.openURL(action.url);

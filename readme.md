@@ -59,12 +59,15 @@ export default function App() {
 
 ## Props
 
-Prop | Description | Type | Default
+Prop | Description | Type | Default | Required
 ------ | ------ | ------ | ------
-**`stories`** | Array of Story | Array | **Required**
-**`firstItem`** | Index of a slide to be shown first | number | 0
-**`onStoryEnd`** | Callback function to be called after nested story reaches end | Function | __Optional__
-**`onAllEnd`** | Callback function to be called after the last story reaches end | Function | __Optional__
+**`stories`** | Array of `Story` or `NestedStory` | Array | | **Required**
+**`firstItem`** | Index of a slide to be shown first (used in Instagram-like layout) | Number | 0 | __Optional__
+**`nestedStories`** | If `true` story will have multiple children slides (used in Instagram-like layout) | Boolean | false | __Optional__
+**`bubbleIndicators`** | If `true` the indicators will be rounded | Boolean | false |__Optional__
+**`headers`** | HTTP header properties used to request the content | Object | | __Optional__
+**`onStoryEnd`** | Callback function to be called after nested story reaches end | Function | | __Optional__
+**`onAllEnd`** | Callback function to be called after the last story reaches end | Function | | __Optional__
 
 ## Types
 
@@ -76,6 +79,15 @@ Prop | Description | Type | Default
 **`source`** | URL of video or img | String | **Required**
 **`duration`** | Duration of how long an image slide should be shown in millisenconds | Number | Required for `img` only
 **`action`** | Swipe up action | Array of `{label: string, url: string}` | __Optional__
+
+### Nested Story
+
+Often used when building Instagram-like stories where each story has children slides. `nestedStories` prop must be set to true when using this.
+
+Prop | Description | Type | Default
+------ | ------ | ------ | ------
+**`children`** | Array of `Story` | Array | __Optional__
+
 
 ## Todo
 

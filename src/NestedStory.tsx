@@ -1,31 +1,27 @@
 import React, { MutableRefObject } from 'react';
 import { View, StyleSheet, Dimensions, Image } from 'react-native';
-import { Slide } from './Stories';
-import Indicators from './Indicators';
-import { TapGestureHandlerStateChangeEvent } from 'react-native-gesture-handler';
 import { Video, AVPlaybackStatus } from 'expo-av';
-import SlideWrapper from './SlideWrapper';
+import { TapGestureHandlerStateChangeEvent } from 'react-native-gesture-handler';
 import Animated, { set } from 'react-native-reanimated';
 import memoizeOne from 'memoize-one';
 import * as Haptics from 'expo-haptics';
 
-const debounce = (func, delay) => {
-  let inDebounce;
-  return function () {
-    const context = this;
-    const args = arguments;
-    clearTimeout(inDebounce);
-    inDebounce = setTimeout(() => func.apply(context, args), delay);
-  };
-};
+import { Slide } from './Stories';
+import Indicators from './Indicators';
+import SlideWrapper from './SlideWrapper';
+import debounce from './utils/debounce';
 
 interface Props {
   slides: Slide[];
   isActive: boolean;
-  onEnd: () => void;
-  snapToNext: () => void;
+  headers?: {
+    [key: string]: string;
+  };
   isLast: boolean;
   bubbleIndicators: boolean;
+
+  onEnd: () => void;
+  snapToNext: () => void;
 }
 
 interface State {
@@ -241,6 +237,7 @@ class NestedStory extends React.Component<Props, State> {
                 uri: slide.source,
                 headers: {
                   'cache-control': 'max-age=300',
+                  ...this.props.headers,
                 },
               }}
               onLoadStart={() =>

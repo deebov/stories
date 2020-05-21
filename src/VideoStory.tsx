@@ -1,19 +1,23 @@
 import React, { useRef, memo, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { Story, Indicator } from './Stories';
-import SlideWrapper from './SlideWrapper';
 import Video from 'expo-video';
 
-export interface Props {
+import { Story, Indicator } from './Stories';
+import SlideWrapper from './SlideWrapper';
+
+export interface SlideProps {
   story: Story;
   isActive: boolean;
+  headers?: {
+    [key: string]: string;
+  };
 
   setIndicator: (indicator: Partial<Indicator>) => void;
   onClose: () => void;
 }
 
-const VideoStory: React.FC<Props> = memo(
-  ({ isActive, story, setIndicator, onClose }) => {
+const VideoStory: React.FC<SlideProps> = memo(
+  ({ isActive, story, headers, setIndicator, onClose }) => {
     const videoRef = useRef<Video>();
     const [paused, setPaused] = useState(true);
     const [buffering, setBuffering] = useState(false);
@@ -46,6 +50,7 @@ const VideoStory: React.FC<Props> = memo(
           ref={videoRef}
           source={{
             uri: story.source,
+            headers: headers
           }}
           resizeMode="cover"
           shouldPlay={isActive}
