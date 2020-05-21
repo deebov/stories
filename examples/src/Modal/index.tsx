@@ -48,7 +48,7 @@ const data = [
 const ModalScreen: React.FC<any> = ({ navigation }) => (
   <SafeAreaView style={styles.container}>
     <StatusBar animated barStyle="light-content" />
-    <Stories stories={data} onStoryEnd={() => navigation.goBack()} />
+    <Stories bubbleIndicators={true} stories={data} onAllEnd={() => navigation.goBack()} />
   </SafeAreaView>
 );
 
