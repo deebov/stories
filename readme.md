@@ -60,14 +60,14 @@ export default function App() {
 ## Props
 
 Prop | Description | Type | Default | Required
------- | ------ | ------ | ------
-**`stories`** | Array of `Story` or `NestedStory` | Array | | **Required**
-**`firstItem`** | Index of a slide to be shown first (used in Instagram-like layout) | Number | 0 | __Optional__
-**`nestedStories`** | If `true` story will have multiple children slides (used in Instagram-like layout) | Boolean | false | __Optional__
-**`bubbleIndicators`** | If `true` the indicators will be rounded | Boolean | false |__Optional__
-**`headers`** | HTTP header properties used to request the content | Object | | __Optional__
-**`onStoryEnd`** | Callback function to be called after nested story reaches end | Function | | __Optional__
-**`onAllEnd`** | Callback function to be called after the last story reaches end | Function | | __Optional__
+------ | ------ | ------ | ------ | ------
+**`stories`** | Array of `Story` or `NestedStory` | Array | | **Yes**
+**`firstItem`** | Index of a slide to be shown first (used in Instagram-like layout) | Number | 0 | __No__
+**`nestedStories`** | If `true` story will have multiple children slides (used in Instagram-like layout) | Boolean | false | __No__
+**`bubbleIndicators`** | If `true` the indicators will be rounded | Boolean | false |__No__
+**`headers`** | HTTP header properties used to request the content | Object | | __No__
+**`onStoryEnd`** | Callback function to be called after nested story reaches end | Function | | __No__
+**`onAllEnd`** | Callback function to be called after the last story reaches end | Function | | __No__
 
 ## Types
 
